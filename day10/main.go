@@ -16,10 +16,6 @@ func main() {
 	badChars := []string{}
 	lineCount := 0
 	for _, line := range lines {
-		if strings.Contains(line, " ") {
-			fmt.Println("Contains space")
-			continue
-		}
 		l := strings.Split(line, "")
 		badChar := checkLine(l)
 		if badChar != "" {
@@ -28,7 +24,26 @@ func main() {
 		lineCount += 1
 		fmt.Println("line count: ", lineCount)
 	}
-	fmt.Println(badChars)
+	fmt.Println(makeScore(badChars))
+}
+
+func makeScore(badChars []string) int {
+	parenthesesCount := 0
+	squareCount := 0
+	curlyCount := 0
+	greaterThanCount := 0
+	for _, badChar := range badChars {
+		if badChar == ")" {
+			parenthesesCount += 1
+		} else if badChar == "]" {
+			squareCount += 1
+		} else if badChar == "}" {
+			curlyCount += 1
+		} else if badChar == ">" {
+			greaterThanCount += 1
+		}
+	}
+	return (3 * parenthesesCount) + (57 * squareCount) + (1197 * curlyCount) + (25137 * greaterThanCount)
 }
 
 func checkLine(line []string) string {
@@ -39,28 +54,21 @@ func checkLine(line []string) string {
 		} else {
 			if char == ")" && openingBrackets[len(openingBrackets)-1] == "(" {
 				openingBrackets = sliceDelete(openingBrackets)
-			} else {
-				fmt.Println("line:", line, "char:", char)
-				return char
+				continue
 			}
 			if char == "]" && openingBrackets[len(openingBrackets)-1] == "[" {
 				openingBrackets = sliceDelete(openingBrackets)
-			} else {
-				fmt.Println("line:", line, "char:", char)
-				return char
+				continue
 			}
 			if char == "}" && openingBrackets[len(openingBrackets)-1] == "{" {
 				openingBrackets = sliceDelete(openingBrackets)
-			} else {
-				fmt.Println("line:", line, "char:", char)
-				return char
+				continue
 			}
 			if char == ">" && openingBrackets[len(openingBrackets)-1] == "<" {
 				openingBrackets = sliceDelete(openingBrackets)
-			} else {
-				fmt.Println("line:", line, "char:", char)
-				return char
+				continue
 			}
+			return char
 		}
 	}
 	return ""
